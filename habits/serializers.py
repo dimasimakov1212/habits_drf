@@ -1,23 +1,26 @@
 from rest_framework import serializers
 
-from habits.models import Habit
+from habits.models import Habit, Prize
+from habits.validators import validator_for_habit
 
 
 class HabitSerializer(serializers.ModelSerializer):
-    """
-    Класс сериализатора для модели Habit
-    """
+    """ сериализатор для модели Habit """
 
     class Meta:
         model = Habit
         # exclude = ('habit_duration', )
         fields = '__all__'
 
-    # def get_lessons(self, course):
-    #     """
-    #     Метод определения поля lessons
-    #     :return: список уроков курса
-    #     """
-    #     lessons = [lesson.lesson_title for lesson in Lesson.objects.filter(course=course)]
-    #     return lessons
+        # валидаторы на правильность заполнения полей привычки
+        validators = [
+            validator_for_habit,
+        ]
 
+
+class PrizeSerializer(serializers.ModelSerializer):
+    """ сериализатор для модели Prize """
+
+    class Meta:
+        model = Prize
+        fields = '__all__'

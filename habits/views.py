@@ -1,20 +1,20 @@
 from django.shortcuts import render
 from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from habits.models import Habit
-from habits.serializers import HabitSerializer
+from habits.models import Habit, Prize
+from habits.serializers import HabitSerializer, PrizeSerializer
 
 
 class HabitCreateAPIView(generics.CreateAPIView):
     """ создание привычки """
 
     serializer_class = HabitSerializer
-    queryset = Habit.objects.all()
+    # queryset = Habit.objects.all()
 
     # доступно только авторизованным пользователям и не модераторам
-    # permission_classes = [IsAuthenticated, IsMember]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    # permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
         """
@@ -33,7 +33,7 @@ class HabitListAPIView(generics.ListAPIView):
     queryset = Habit.objects.all()
 
     # доступно только авторизованным пользователям, модераторам или владельцам
-    # permission_classes = [IsAuthenticated, IsModerator | IsOwner]
+    # permission_classes = [IsAuthenticated]
     permission_classes = [AllowAny]
 
     # pagination_class = CourseLessonPaginator  # пагинация
@@ -66,3 +66,35 @@ class HabitDestroyAPIView(generics.DestroyAPIView):
 
     # доступно только авторизованным владельцам
     # permission_classes = [IsAuthenticated, IsOwner]
+
+
+class PrizeCreateAPIView(generics.CreateAPIView):
+    """ создание награды """
+
+    serializer_class = PrizeSerializer
+
+    # доступно только авторизованным пользователям и не модераторам
+    # permission_classes = [IsAuthenticated, IsMember]
+    permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        """
+        Определяем порядок создания нового объекта
+        """
+        new_prize = serializer.save()
+        new_prize.prize_owner = self.request.user  # задаем владельца привычки
+
+        new_prize.save()
+
+
+class PrizeListAPIView(generics.ListAPIView):
+    """ вывод списка наград """
+
+    serializer_class = PrizeSerializer
+    queryset = Prize.objects.all()
+
+    # доступно только авторизованным пользователям, модераторам или владельцам
+    # permission_classes = [IsAuthenticated, IsModerator | IsOwner]
+    permission_classes = [AllowAny]
+
+    # pagination_class = CourseLessonPaginator  # пагинация
