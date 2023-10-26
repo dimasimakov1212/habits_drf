@@ -22,14 +22,14 @@ class Prize(models.Model):
 class Habit(models.Model):
     """ Модель привычки """
 
+    PERIOD_HOURLY = 'ежечасно'
     PERIOD_DAILY = 'ежедневно'
     PERIOD_WEEKLY = 'еженедельно'
-    PERIOD_MONTHLY = 'ежемесячно'
 
     PERIOD_CHOICES = (
+        (PERIOD_HOURLY, 'ежечасно'),
         (PERIOD_DAILY, 'ежедневно'),
         (PERIOD_WEEKLY, 'еженедельно'),
-        (PERIOD_MONTHLY, 'ежемесячно')
     )
 
     habit_user = models.CharField(max_length=100, verbose_name='пользователь')
@@ -43,7 +43,8 @@ class Habit(models.Model):
     habit_period = models.CharField(max_length=20, choices=PERIOD_CHOICES, default=PERIOD_DAILY,
                                     verbose_name='периодичность привычки')
     habit_prize = models.ForeignKey(Prize, on_delete=models.CASCADE, blank=True, null=True, verbose_name='приз')
-    habit_duration = models.DurationField(default=timedelta(minutes=2), verbose_name='продолжительность привычки')
+    habit_duration = models.DurationField(default=timedelta(minutes=2),
+                                          verbose_name='продолжительность выполнения привычки')
     habit_is_public = models.BooleanField(default=True, verbose_name='признак публичной привычки')
 
     habit_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='владелец',
