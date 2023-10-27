@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from habits.models import Habit, Prize
+from habits.permissions import IsOwner
 from habits.serializers import HabitSerializer, PrizeSerializer
 
 
@@ -27,16 +28,39 @@ class HabitCreateAPIView(generics.CreateAPIView):
 
 
 class HabitListAPIView(generics.ListAPIView):
-    """ вывод списка привычек """
+    """ вывод списка привычек пользователя """
 
     serializer_class = HabitSerializer
-    queryset = Habit.objects.all()
+    # pagination_class = CourseLessonPaginator  # пагинация
 
-    # доступно только авторизованным пользователям, модераторам или владельцам
-    # permission_classes = [IsAuthenticated]
+    # доступно только авторизованным пользователям, и владельцам
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        """ Определяем параметры вывода объектов """
+
+        queryset = Habit.objects.filter(habit_owner=self.request.user)
+        return queryset
+
+    # queryset = Habit.objects.all()
+
+    # permission_classes = [AllowAny]
+
+
+class HabitPublicListAPIView(generics.ListAPIView):
+    """ вывод списка публичных привычек """
+
+    serializer_class = HabitSerializer
+    # pagination_class = CourseLessonPaginator  # пагинация
+
+    # доступно любым пользователям
     permission_classes = [AllowAny]
 
-    # pagination_class = CourseLessonPaginator  # пагинация
+    def get_queryset(self):
+        """ Определяем параметры вывода объектов """
+
+        queryset = Habit.objects.filter(habit_is_public=True)
+        return queryset
 
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):
@@ -45,8 +69,8 @@ class HabitRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
 
-    # доступно только авторизованным пользователям, модераторам или владельцам
-    # permission_classes = [IsAuthenticated, IsModerator | IsOwner]
+    # доступно только авторизованным пользователям, и владельцам
+    permission_classes = [IsAuthenticated, IsOwner]
 
 
 class HabitUpdateAPIView(generics.UpdateAPIView):
@@ -55,8 +79,8 @@ class HabitUpdateAPIView(generics.UpdateAPIView):
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
 
-    # доступно только авторизованным пользователям, модераторам или владельцам
-    # permission_classes = [IsAuthenticated, IsModerator | IsOwner]
+    # доступно только авторизованным пользователям, и владельцам
+    permission_classes = [IsAuthenticated, IsOwner]
 
 
 class HabitDestroyAPIView(generics.DestroyAPIView):
@@ -64,8 +88,8 @@ class HabitDestroyAPIView(generics.DestroyAPIView):
 
     queryset = Habit.objects.all()
 
-    # доступно только авторизованным владельцам
-    # permission_classes = [IsAuthenticated, IsOwner]
+    # доступно только авторизованным пользователям, и владельцам
+    permission_classes = [IsAuthenticated, IsOwner]
 
 
 class PrizeCreateAPIView(generics.CreateAPIView):
@@ -73,14 +97,12 @@ class PrizeCreateAPIView(generics.CreateAPIView):
 
     serializer_class = PrizeSerializer
 
-    # доступно только авторизованным пользователям и не модераторам
-    # permission_classes = [IsAuthenticated, IsMember]
-    permission_classes = [AllowAny]
+    # доступно только авторизованным пользователям
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        """
-        Определяем порядок создания нового объекта
-        """
+        """ Определяем порядок создания нового объекта """
+
         new_prize = serializer.save()
         new_prize.prize_owner = self.request.user  # задаем владельца привычки
 
@@ -91,10 +113,15 @@ class PrizeListAPIView(generics.ListAPIView):
     """ вывод списка наград """
 
     serializer_class = PrizeSerializer
-    queryset = Prize.objects.all()
 
-    # доступно только авторизованным пользователям, модераторам или владельцам
-    # permission_classes = [IsAuthenticated, IsModerator | IsOwner]
-    permission_classes = [AllowAny]
+    # доступно только авторизованным пользователям, и владельцам
+    permission_classes = [IsAuthenticated, IsOwner]
+    # permission_classes = [AllowAny]
 
     # pagination_class = CourseLessonPaginator  # пагинация
+
+    def get_queryset(self):
+        """ Определяем параметры вывода объектов """
+
+        queryset = Prize.objects.filter(prize_owner=self.request.user)
+        return queryset
