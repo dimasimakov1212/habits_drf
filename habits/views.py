@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from habits.models import Habit, Prize
+from habits.paginators import HabitPrizePaginator
 from habits.permissions import IsOwner
 from habits.serializers import HabitSerializer, PrizeSerializer
 
@@ -31,7 +32,7 @@ class HabitListAPIView(generics.ListAPIView):
     """ вывод списка привычек пользователя """
 
     serializer_class = HabitSerializer
-    # pagination_class = CourseLessonPaginator  # пагинация
+    pagination_class = HabitPrizePaginator  # пагинация
 
     # доступно только авторизованным пользователям, и владельцам
     permission_classes = [IsAuthenticated, IsOwner]
@@ -51,7 +52,7 @@ class HabitPublicListAPIView(generics.ListAPIView):
     """ вывод списка публичных привычек """
 
     serializer_class = HabitSerializer
-    # pagination_class = CourseLessonPaginator  # пагинация
+    pagination_class = HabitPrizePaginator  # пагинация
 
     # доступно любым пользователям
     permission_classes = [AllowAny]
@@ -118,7 +119,7 @@ class PrizeListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
     # permission_classes = [AllowAny]
 
-    # pagination_class = CourseLessonPaginator  # пагинация
+    pagination_class = HabitPrizePaginator  # пагинация
 
     def get_queryset(self):
         """ Определяем параметры вывода объектов """
