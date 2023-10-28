@@ -4,7 +4,7 @@ from rest_framework.permissions import BasePermission
 class IsOwner(BasePermission):
     """ Задаем права владельцев объектов """
     def has_object_permission(self, request, view, obj):
-        if request.user == obj.owner:
+        if request.user == obj.habit_owner:
             return True
 
         return False

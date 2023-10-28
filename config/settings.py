@@ -156,3 +156,6 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=240),  # время жизни токена
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+TELEGRAM_ACCESS_TOKEN = os.getenv('TELEGRAM_ACCESS_TOKEN')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
