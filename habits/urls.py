@@ -1,7 +1,7 @@
 from django.urls import path
 
 from habits.apps import HabitsConfig
-from habits.services import send_message_to_bot, get_bot_id
+from habits.services import get_bot_id
 from habits.views import HabitCreateAPIView, HabitListAPIView, HabitRetrieveAPIView, HabitUpdateAPIView, \
     HabitDestroyAPIView, PrizeCreateAPIView, PrizeListAPIView, HabitPublicListAPIView
 
@@ -18,6 +18,6 @@ urlpatterns = [
     path('prize_create/', PrizeCreateAPIView.as_view(), name='prize_create'),
     path('prizes/', PrizeListAPIView.as_view(), name='prize_list'),
 
-    path('send_message/', send_message_to_bot, name='send_message'),
+    # path('send_message/', check_habit, name='send_message'),
     path('get_bot_id/', get_bot_id, name='get_bot_id'),
     ]
