@@ -24,12 +24,10 @@ class Prize(models.Model):
 class Habit(models.Model):
     """ Модель привычки """
 
-    PERIOD_HOURLY = 'ежечасно'
     PERIOD_DAILY = 'ежедневно'
     PERIOD_WEEKLY = 'еженедельно'
 
     PERIOD_CHOICES = (
-        (PERIOD_HOURLY, 'ежечасно'),
         (PERIOD_DAILY, 'ежедневно'),
         (PERIOD_WEEKLY, 'еженедельно'),
     )
