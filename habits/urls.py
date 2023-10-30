@@ -24,4 +24,4 @@ urlpatterns = [
 
     # path('send_message/', check_habit, name='send_message'),
     path('get_bot_id/', get_bot_id, name='get_bot_id'),
-    ]
+]
