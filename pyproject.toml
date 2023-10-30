@@ -19,6 +19,8 @@ requests = "^2.31.0"
 django-celery-beat = "^2.5.0"
 celery = "^5.3.4"
 redis = "^5.0.1"
+coverage = "^7.3.2"
+flake8 = "^6.1.0"
 
 
 [build-system]

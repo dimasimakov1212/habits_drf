@@ -72,7 +72,7 @@ def create_massage(habit_id):
     return HttpResponse(response)
 
 
-def get_bot_id(self):
+def get_bot_id():
     """ получения данных чата """
 
     response = requests.get(get_id_url).json()
