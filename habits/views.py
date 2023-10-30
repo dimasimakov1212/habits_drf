@@ -1,10 +1,9 @@
-from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from habits.models import Habit, Prize
 from habits.paginators import HabitPrizePaginator
-from habits.permissions import IsOwner
+from habits.permissions import IsOwner, IsPrizeOwner
 from habits.serializers import HabitSerializer, PrizeSerializer
 
 
@@ -42,10 +41,6 @@ class HabitListAPIView(generics.ListAPIView):
 
         queryset = Habit.objects.filter(habit_owner=self.request.user)
         return queryset
-
-    # queryset = Habit.objects.all()
-
-    # permission_classes = [AllowAny]
 
 
 class HabitPublicListAPIView(generics.ListAPIView):
@@ -116,7 +111,7 @@ class PrizeListAPIView(generics.ListAPIView):
     serializer_class = PrizeSerializer
 
     # доступно только авторизованным пользователям, и владельцам
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsPrizeOwner]
     # permission_classes = [AllowAny]
 
     pagination_class = HabitPrizePaginator  # пагинация
@@ -126,3 +121,32 @@ class PrizeListAPIView(generics.ListAPIView):
 
         queryset = Prize.objects.filter(prize_owner=self.request.user)
         return queryset
+
+
+class PrizeRetrieveAPIView(generics.RetrieveAPIView):
+    """ просмотр информации об одной награде """
+
+    serializer_class = PrizeSerializer
+    queryset = Prize.objects.all()
+
+    # доступно только авторизованным пользователям, и владельцам
+    permission_classes = [IsAuthenticated, IsPrizeOwner]
+
+
+class PrizeUpdatePIView(generics.UpdateAPIView):
+    """ изменение награды """
+
+    serializer_class = PrizeSerializer
+    queryset = Prize.objects.all()
+
+    # доступно только авторизованным пользователям, и владельцам
+    permission_classes = [IsAuthenticated, IsPrizeOwner]
+
+
+class PrizeDestroyPIView(generics.DestroyAPIView):
+    """ удаление награды """
+
+    queryset = Prize.objects.all()
+
+    # доступно только авторизованным пользователям, и владельцам
+    permission_classes = [IsAuthenticated, IsPrizeOwner]

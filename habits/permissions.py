@@ -4,18 +4,18 @@ from rest_framework.permissions import BasePermission
 class IsOwner(BasePermission):
     """ Задаем права владельцев объектов """
     def has_object_permission(self, request, view, obj):
+
         if request.user == obj.habit_owner:
             return True
 
         return False
 
 
-class IsSubscriber(BasePermission):
-    """
-    Задаем права подписчиков
-    """
+class IsPrizeOwner(BasePermission):
+    """ Задаем права владельцев объектов """
     def has_object_permission(self, request, view, obj):
-        if request.user == obj.user:
+
+        if request.user == obj.prize_owner:
             return True
 
         return False
