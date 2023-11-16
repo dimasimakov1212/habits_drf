@@ -88,16 +88,25 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'habits_drf',
+#         'USER': 'postgres',
+#         'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+#         'HOST': '127.0.0.1'
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'habits_drf',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': '127.0.0.1'
+        'PASSWORD': os.getenv('DB_DOCKER_PASSWORD'),  # пароль, созданный при запуске контейнера postgres
+        'HOST': 'db'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -164,8 +173,12 @@ SIMPLE_JWT = {
 TELEGRAM_ACCESS_TOKEN = os.getenv('TELEGRAM_ACCESS_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+# CELERY_BROKER_URL = "redis://localhost:6379"
+# CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+# настройки доступа к redis в докер-контейнере
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",  # Замените на адрес вашего фронтенд-сервера
